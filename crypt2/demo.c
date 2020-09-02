@@ -1,0 +1,53 @@
+
+
+
+//DEBUG
+void print_char_hex(char *_in, int _len)
+{
+	for (int i = 0; i<_len; i++)
+	{
+	    printf("%02X", _in[i] & 0xFF);
+
+	    if (i < (_len - 1)) printf("-");
+	}
+}
+
+
+//TESTING
+int main()
+{
+	printf("Started.\n");
+
+	struct AES_ctx ctx;
+
+	uint8_t key[32] = { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
+                        0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7, 0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4 };
+    uint8_t iv[16]  = { 0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff };
+    uint8_t in[16]  = { 0x60, 0x1e, 0xc3, 0x13, 0x77, 0x57, 0x89, 0xa5, 0xb7, 0xa7, 0xf5, 0x04, 0xbb, 0xf3, 0xd2, 0x28 };
+
+
+    printf("Key: ");
+    print_char_hex(key, sizeof(key));
+    printf("\n");
+
+    printf("Input:      ");
+    print_char_hex(in, sizeof(in));
+    printf("\n");
+
+    //AES_init_ctx_iv(&ctx, key, iv);
+    //AES_CTR_xcrypt_buffer(&ctx, in, 16);
+    aes256ctr_set_key(&ctx, key);
+    aes256ctr_xcrypt(&ctx, in, iv);
+
+    printf("Encoded:    ");
+    print_char_hex(in, sizeof(in));
+    printf("\n");
+
+    aes256ctr_set_key(&ctx, key);
+    aes256ctr_xcrypt(&ctx, in, iv);
+
+    printf("Decoded:    ");
+    print_char_hex(in, sizeof(in));
+    printf("\n");
+
+}
